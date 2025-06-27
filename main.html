@@ -1,4 +1,5 @@
-<html>
+<!DOCTYPE html>
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,9 +15,39 @@
     
     <!-- Menggunakan Lucide Icons untuk ikon yang modern -->
     <script src="https://unpkg.com/lucide@latest"></script>
-  
-</head>
 
+    <style>
+        /* Mengatur font default ke Inter */
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        /* Style untuk scrollbar yang lebih halus (opsional) */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+        /* Menyembunyikan elemen secara default */
+        .hidden {
+            display: none;
+        }
+        /* Style untuk menampilkan elemen (misal: dropdown dan modal) */
+        .show {
+            display: block;
+        }
+        .modal {
+            display: flex;
+        }
+    </style>
+</head>
 <body class="bg-gray-100">
 
     <!-- Kontainer utama yang mensimulasikan tampilan mobile -->
@@ -255,5 +286,47 @@
     <div id="bantuan-modal" class="hidden fixed inset-0 bg-black/60 z-40 items-center justify-center p-4"><div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm relative"><button data-close-button class="absolute top-3 right-3 text-gray-400 hover:text-gray-800"><i data-lucide="x" class="w-6 h-6"></i></button><h3 class="text-lg font-bold mb-4">Pusat Bantuan</h3><p class="text-gray-600">Jika Anda memiliki pertanyaan, silakan hubungi kami melalui email di <a href="mailto:support@tokoku.com" class="text-indigo-600">support@tokoku.com</a>.</p></div></div>
     <div id="tentang-modal" class="hidden fixed inset-0 bg-black/60 z-40 items-center justify-center p-4"><div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm relative"><button data-close-button class="absolute top-3 right-3 text-gray-400 hover:text-gray-800"><i data-lucide="x" class="w-6 h-6"></i></button><h3 class="text-lg font-bold mb-4">Tentang TokoKu</h3><p class="text-gray-600">TokoKu adalah destinasi utama Anda untuk fashion terkini. Kami berkomitmen untuk menyediakan produk berkualitas dengan harga terbaik.</p></div></div>
 
-  
+    <script>
+        // Inisialisasi Lucide Icons
+        lucide.createIcons();
+
+        // --- Logika untuk Dropdown Menu ---
+        const menuButton = document.getElementById('menu-button');
+        const dropdownMenu = document.getElementById('dropdown-menu');
+        menuButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            dropdownMenu.classList.toggle('show');
+            dropdownMenu.classList.toggle('hidden');
+        });
+        window.addEventListener('click', () => {
+            if (dropdownMenu.classList.contains('show')) {
+                dropdownMenu.classList.remove('show');
+                dropdownMenu.classList.add('hidden');
+            }
+        });
+
+        // --- Logika untuk Modal (Popup) ---
+        const openModalButtons = document.querySelectorAll('[data-modal-target]');
+        const closeModalButtons = document.querySelectorAll('[data-close-button]');
+        function openModal(modal) { if (modal == null) return; modal.classList.remove('hidden'); modal.classList.add('modal'); }
+        function closeModal(modal) { if (modal == null) return; modal.classList.add('hidden'); modal.classList.remove('modal'); }
+        openModalButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault();
+                const modal = document.querySelector(button.dataset.modalTarget);
+                openModal(modal);
+                dropdownMenu.classList.remove('show');
+                dropdownMenu.classList.add('hidden');
+            });
+        });
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', () => { closeModal(button.closest('.fixed')); });
+        });
+        document.querySelectorAll('.fixed.inset-0').forEach(overlay => {
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) { closeModal(overlay); }
+            });
+        });
+    </script>
+</body>
 </html>
